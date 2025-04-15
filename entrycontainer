@@ -39,4 +39,4 @@ docker run --name ${CONTAINER_NAME} --volume ${REPO_DIR}:${HOME_DIR}/openbmc:rw 
   --env TERM=xterm-256color --env SHELL=/bin/bash \
   --rm --init --tty --interactive \
   --hostname dockerbmc \
-  obmcbuilder "$@"
+  obmcbuilder

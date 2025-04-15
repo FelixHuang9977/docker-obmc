@@ -1,2 +1,5 @@
 openbmc
 build
+qemu-system-aarch64
+lib_fx_expect.sh
+my_qemu.*
