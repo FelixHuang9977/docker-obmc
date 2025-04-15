@@ -1,0 +1,3 @@
+[submodule "openbmc_submod"]
+	path = openbmc_submod
+	url = https://github.com/openbmc/openbmc.git

@@ -29,9 +29,9 @@ RUN groupadd -g $groupid $username \
  && useradd -m -u $userid -g $groupid $username \
  && echo $username >/root/username
 
-COPY gitconfig /home/$username/.gitconfig
+#COPY gitconfig /home/$username/.gitconfig
 
-RUN chown $userid:$groupid /home/$username/.gitconfig
+#RUN chown $userid:$groupid /home/$username/.gitconfig
 
 ENV HOME=/home/$username
 ENV USER=$username

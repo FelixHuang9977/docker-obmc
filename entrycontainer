@@ -6,6 +6,8 @@ HOME_DIR="${HOME}"
 REPO_DIR=$(realpath ./openbmc)
 MOUNT_DIRS=""
 PASSTHROUGH_ADDITIONS=""
+SCRIPT_DIR=$(realpath ./build_scripts)
+CONTAINER_NAME="$(whoami)_obmcbuilder"
 
 if [ -n "${DL_DIR}" ]; then
    MOUNT_DIRS="--volume $(readlink -f "${DL_DIR}"):${HOME_DIR}/downloads:rw --env DL_DIR=${HOME_DIR}/downloads"
@@ -17,11 +19,24 @@ if [ -n "${SSTATE_DIR}" ]; then
    PASSTHROUGH_ADDITIONS="${PASSTHROUGH_ADDITIONS} SSTATE_DIR"
 fi
 
-docker run --volume ${REPO_DIR}:${HOME_DIR}/openbmc:rw --volume /tmp:/tmp \
+docker run --name ${CONTAINER_NAME} --volume ${REPO_DIR}:${HOME_DIR}/openbmc:rw --volume /tmp:/tmp \
+  --volume ${SCRIPT_DIR}:/build_scripts:rw \
+  --workdir=${HOME_DIR}/openbmc \
+  ${MOUNT_DIRS} \
+  ${PASSTHROUGH_ADDITIONS:+--env BB_ENV_PASSTHROUGH_ADDITIONS="${PASSTHROUGH_ADDITIONS}"} \
+  --env TERM=xterm-256color --env SHELL=/bin/bash \
+  --rm --init --tty \
+  --hostname dockerbmc \
+  obmcbuilder "$@"
+
+exit 0
+
+docker run --name ${CONTAINER_NAME} --volume ${REPO_DIR}:${HOME_DIR}/openbmc:rw --volume /tmp:/tmp \
+  --volume ${SCRIPT_DIR}:/build_scripts:rw \
   --workdir=${HOME_DIR}/openbmc \
   ${MOUNT_DIRS} \
   ${PASSTHROUGH_ADDITIONS:+--env BB_ENV_PASSTHROUGH_ADDITIONS="${PASSTHROUGH_ADDITIONS}"} \
   --env TERM=xterm-256color --env SHELL=/bin/bash \
   --rm --init --tty --interactive \
   --hostname dockerbmc \
-  obmcbuilder
+  obmcbuilder "$@"
