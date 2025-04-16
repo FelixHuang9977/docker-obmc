@@ -21,7 +21,7 @@ done
 [[ ! -z $vMyRunningPid ]] && echo "kill exiting qemu pid=$vMyRunningPid...." && kill $vMyRunningPid && sleep 2
 
 echo "Run qemu in background with $vMyImage"
-nohup ./qemu-system-aarch64 -m 1024 -M ast2600-evb -nographic -smp 2 -drive file=${vMyImage},format=raw,if=mtd -net nic -net user,hostfwd=:0.0.0.0:${vMyQemuSshPort}-:22,hostfwd=:0.0.0.0:${vMyQemuHttpsPort}-:443,hostfwd=:0.0.0.0:${vMyQemuHttpPort}-:80,hostfwd=udp:0.0.0.0:${vMyQemuUdpPort}-:623,hostname=qemu -D qemu_full.log 2>&1 > my_qemu.log &
+nohup ./qemu-system-aarch64 -m 1024 -M ast2600-evb -nographic -smp 2 -drive file=${vMyImage},format=raw,if=mtd -net nic -net user,hostfwd=:0.0.0.0:${vMyQemuSshPort}-:22,hostfwd=:0.0.0.0:${vMyQemuHttpsPort}-:443,hostfwd=:0.0.0.0:${vMyQemuHttpPort}-:80,hostfwd=udp:0.0.0.0:${vMyQemuUdpPort}-:623,hostname=qemu 2>&1 > my_qemu.log &
 
 sleep 1
 vMyRunningPid=$(ps -elf|grep qemu|awk "/:$vMyQemuSshPort/{print \$4}")
